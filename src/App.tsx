@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { ThemeContext } from "./context/ThemeContext";
+import MainLayout from "./layout/MainLayout";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
-import MainLayout from "./layout/MainLayout";
-import { ThemeContext } from "./context/ThemeContext";
+import LoginPage from "./pages/LoginPage";
 
 const App: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -23,7 +23,7 @@ const App: React.FC = () => {
             path="/"
             element={
               <MainLayout>
-                <HomePage />
+                <LoginPage />
               </MainLayout>
             }
           />
