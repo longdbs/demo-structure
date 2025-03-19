@@ -1,23 +1,65 @@
-import { useProductList } from "../hooks/useProductList";
-import { formatCurrencyJPY } from "../utils/formatCurrencyJPY";
+import { Logout, Settings } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Grid2,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  MenuList,
+} from "@mui/material";
+import { useState } from "react";
 
 function ConversationPage() {
-  const { error, isLoading, productList } = useProductList();
-  if (isLoading) return <p>Loading....</p>;
-  if (!!error && !isLoading && !productList?.length) return <p>Error ....</p>;
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
-    <div>
-      <h1>Welcome to the Home Page</h1>
-      <p>This is the home page of our app!</p>
-      <div>
-        {productList?.map((p) => (
-          <div key={p.id} style={{ display: "flex", gap: 4 }}>
-            <p>{p?.name}</p>
-            <p>{formatCurrencyJPY(p?.price)}</p>
-          </div>
-        ))}
-      </div>
-    </div>
+    <Grid2 container>
+      <Box sx={{ textAlign: "right", width: "100%", p: 2 }}>
+        <Button
+          variant="contained"
+          id="basic-button"
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleClick}
+          sx={{ borderRadius: 16 }}
+        >
+          Dashboard
+        </Button>
+      </Box>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuList>
+          <MenuItem>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Setting</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Logout</ListItemText>
+          </MenuItem>
+        </MenuList>
+      </Menu>
+    </Grid2>
   );
 }
 
