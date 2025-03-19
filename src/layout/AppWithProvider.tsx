@@ -1,10 +1,13 @@
 import React from "react";
 import App from "../App";
 import { ThemeProvider } from "../context/ThemeContext";
+import { AuthProvider } from "../context/AuthContext";
 
 const AppWithProvider: React.FC = () => (
   <ThemeProvider>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </ThemeProvider>
 );
 

@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
   Grid2,
@@ -15,17 +14,27 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
-import useMultipleDialogs from "../hooks/useMultipleDialogs";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useDebounce } from "../hooks/useDebounce";
+import useMultipleDialogs from "../hooks/useMultipleDialogs";
+import { UserLoginI } from "../types/user.type";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const { dialogs, toggleDialog } = useMultipleDialogs({
     isOpenLogin: false,
   });
+  const [account, setAccount] = useState<UserLoginI>({
+    username: "",
+    password: "",
+  });
   const handleLoginDialog = () => toggleDialog("isOpenLogin");
   const [showPassword, setShowPassword] = React.useState(false);
+  const debouncedUsername = useDebounce(account.username, 500);
+  const debouncedPassword = useDebounce(account.password, 500);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -37,7 +46,27 @@ function LoginPage() {
   ) => {
     event.preventDefault();
   };
-  const handleSignIn = () => navigate("/conversation", { replace: true });
+  const handleSignIn = () => {
+    login(account?.username);
+    navigate("/conversation", { replace: true });
+  };
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    field: string
+  ) => {
+    const value = e.target.value;
+    setAccount((prevAccount) => ({
+      ...prevAccount,
+      [field]: value,
+    }));
+  };
+  useEffect(() => {
+    setAccount((prevAccount) => ({
+      ...prevAccount,
+      username: debouncedUsername,
+      password: debouncedPassword,
+    }));
+  }, [debouncedUsername, debouncedPassword]);
   return (
     <React.Fragment>
       <Grid2 container sx={{ justifyContent: "space-between" }}>
@@ -74,13 +103,14 @@ function LoginPage() {
             </Typography>
           </DialogTitle>
           <DialogContent>
-            <DialogContentText></DialogContentText>
             <Grid2 container sx={{ flexDirection: "column", gap: 2, pt: 2 }}>
               <TextField
                 id="outlined-basic"
                 label="Outlined"
                 variant="outlined"
                 type="email"
+                value={account.username}
+                onChange={(e) => handleInputChange(e, "username")}
               />
               <FormControl sx={{ width: "100%" }} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">
@@ -107,6 +137,8 @@ function LoginPage() {
                     </InputAdornment>
                   }
                   label="Password"
+                  value={account.password}
+                  onChange={(e) => handleInputChange(e, "password")}
                 />
               </FormControl>
             </Grid2>
@@ -117,6 +149,7 @@ function LoginPage() {
               variant="contained"
               sx={{ width: "100%", p: 1 }}
               onClick={handleSignIn}
+              disabled={!account?.username || !account?.password}
             >
               Sign In
             </Button>
