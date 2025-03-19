@@ -26,6 +26,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const usernamePart = username?.split("@")[0];
+  const formattedUsername = usernamePart
+    ? usernamePart.charAt(0).toUpperCase() + usernamePart.slice(1)
+    : "";
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -83,7 +87,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               onClick={handleClick}
               sx={{ borderRadius: 16 }}
             >
-              {username?.split("@")[0]}
+              {formattedUsername?.split("@")[0]}
             </Button>
           </Box>
         )}
