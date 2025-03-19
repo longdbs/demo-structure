@@ -76,7 +76,7 @@ function ConversationPage() {
             <TextField
               id="standard-multiline-static"
               multiline
-              defaultValue="Default Value"
+              placeholder="Ask anything"
               variant="standard"
               slotProps={{
                 input: {
@@ -97,6 +97,8 @@ function ConversationPage() {
               onChange={handleChange}
               displayEmpty
               inputProps={{ "aria-label": "Without label" }}
+              variant="standard"
+              disableUnderline
             >
               <MenuItem value="general">General</MenuItem>
               <MenuItem value="ndis">NDIS</MenuItem>
