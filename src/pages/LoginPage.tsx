@@ -69,7 +69,7 @@ function LoginPage() {
   }, [debouncedUsername, debouncedPassword]);
   return (
     <React.Fragment>
-      <Grid2 container sx={{ justifyContent: "space-between" }}>
+      <Grid2 container sx={{ justifyContent: "space-between", p: 2 }}>
         <Typography variant="h3">Carelogix</Typography>
         <Button
           variant="contained"
