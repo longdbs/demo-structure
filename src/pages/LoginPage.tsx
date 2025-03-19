@@ -37,7 +37,7 @@ function LoginPage() {
   ) => {
     event.preventDefault();
   };
-  const handleSignIn = () => navigate("/home");
+  const handleSignIn = () => navigate("/conversation", { replace: true });
   return (
     <React.Fragment>
       <Grid2 container sx={{ justifyContent: "space-between" }}>

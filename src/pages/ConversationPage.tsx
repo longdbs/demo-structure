@@ -1,7 +1,7 @@
 import { useProductList } from "../hooks/useProductList";
 import { formatCurrencyJPY } from "../utils/formatCurrencyJPY";
 
-function HomePage() {
+function ConversationPage() {
   const { error, isLoading, productList } = useProductList();
   if (isLoading) return <p>Loading....</p>;
   if (!!error && !isLoading && !productList?.length) return <p>Error ....</p>;
@@ -21,4 +21,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default ConversationPage;

@@ -5,6 +5,7 @@ import MainLayout from "./layout/MainLayout";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import LoginPage from "./pages/LoginPage";
+import ConversationPage from "./pages/ConversationPage";
 
 const App: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -24,6 +25,14 @@ const App: React.FC = () => {
             element={
               <MainLayout>
                 <LoginPage />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/conversation"
+            element={
+              <MainLayout>
+                <ConversationPage />
               </MainLayout>
             }
           />
