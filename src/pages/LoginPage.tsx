@@ -17,8 +17,10 @@ import {
 } from "@mui/material";
 import React from "react";
 import useMultipleDialogs from "../hooks/useMultipleDialogs";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
+  const navigate = useNavigate();
   const { dialogs, toggleDialog } = useMultipleDialogs({
     isOpenLogin: false,
   });
@@ -35,7 +37,7 @@ function LoginPage() {
   ) => {
     event.preventDefault();
   };
-
+  const handleSignIn = () => navigate("/home");
   return (
     <React.Fragment>
       <Grid2 container sx={{ justifyContent: "space-between" }}>
@@ -111,10 +113,10 @@ function LoginPage() {
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 3 }}>
             <Button
-              onClick={handleLoginDialog}
               autoFocus
               variant="contained"
               sx={{ width: "100%", p: 1 }}
+              onClick={handleSignIn}
             >
               Sign In
             </Button>
