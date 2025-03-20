@@ -102,8 +102,12 @@ function ConversationPage() {
         container
         sx={{
           alignSelf: "end",
-          width: "80%",
-          transform: "translate(-5%)",
+          width: { xs: "90%", lg: "75%", xl: "80%" },
+          transform: {
+            xs: "translateX(-50%)",
+            xl: "translateX(-50%)",
+            "2xl": "translateX(-50%)",
+          },
           mx: "auto",
           mb: 6,
           bgcolor: "background.paper",
@@ -113,6 +117,11 @@ function ConversationPage() {
           p: 2,
           position: "fixed",
           bottom: 0,
+          left: {
+            xs: "50%",
+            lg: "calc(50% + 120px)",
+          },
+          right: "auto",
         }}
       >
         <Grid2
