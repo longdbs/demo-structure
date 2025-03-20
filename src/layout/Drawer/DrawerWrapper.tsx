@@ -21,7 +21,8 @@ export default function DrawerWrapper({ onDrawerToggle, isMobileOpen }: Props) {
             transition: "background-color 0.3s ease",
             overflowX: "hidden",
             height: "100vh",
-            bgcolor: "#F8F8F8",
+            bgcolor: "background.default",
+            border: "none",
           },
         }}
       >
@@ -43,7 +44,8 @@ export default function DrawerWrapper({ onDrawerToggle, isMobileOpen }: Props) {
             transition: "background-color 0.3s ease",
             overflowX: "hidden",
             height: "100vh",
-            bgcolor: "#F8F8F8",
+            bgcolor: "background.default",
+            border: "none",
           },
         }}
       >

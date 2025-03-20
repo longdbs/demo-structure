@@ -79,7 +79,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <MenuIcon />
             </IconButton>
             <Button
-              variant="contained"
+              variant="outlined"
               id="basic-button"
               aria-controls={open ? "basic-menu" : undefined}
               aria-haspopup="true"

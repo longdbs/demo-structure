@@ -30,7 +30,7 @@ function DrawerMenuList() {
       <List
         sx={{
           width: "calc(100% - 10px)",
-          bgcolor: "#F2ECEC",
+          bgcolor: "background.paper",
           mb: 2,
           mx: "auto",
         }}
@@ -52,14 +52,18 @@ function DrawerMenuList() {
       </List>
 
       <List
-        sx={{ width: "calc(100% - 10px)", bgcolor: "#F2ECEC", mx: "auto" }}
+        sx={{
+          width: "calc(100% - 10px)",
+          bgcolor: "background.paper",
+          mx: "auto",
+        }}
         component="nav"
         aria-labelledby="nested-list-subheader"
         subheader={
           <ListSubheader
             component="div"
             id="nested-list-subheader"
-            sx={{ bgcolor: "#F2ECEC" }}
+            sx={{ bgcolor: "background.paper" }}
           >
             History
           </ListSubheader>
