@@ -3,11 +3,9 @@ import {
   Avatar,
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Checkbox,
   FormControl,
+  FormControlLabel,
   Grid2,
   IconButton,
   InputAdornment,
@@ -18,22 +16,17 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logoCarelogix from "../assets/logoCarelogix.png";
 import { useAuth } from "../context/AuthContext";
 import { useDebounce } from "../hooks/useDebounce";
-import useMultipleDialogs from "../hooks/useMultipleDialogs";
 import { UserLoginI } from "../types/user.type";
-import logoCarelogix from "../assets/logoCarelogix.png";
 function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const { dialogs, toggleDialog } = useMultipleDialogs({
-    isOpenLogin: false,
-  });
   const [account, setAccount] = useState<UserLoginI>({
     username: "",
     password: "",
   });
-  const handleLoginDialog = () => toggleDialog("isOpenLogin");
   const [showPassword, setShowPassword] = React.useState(false);
   const debouncedUsername = useDebounce(account.username, 500);
   const debouncedPassword = useDebounce(account.password, 500);
@@ -80,79 +73,80 @@ function LoginPage() {
           />
           <Typography variant="h3">Carelogix</Typography>
         </Box>
-        <Button
-          variant="contained"
-          sx={{
-            minWidth: "100px",
-            alignSelf: "center",
-            p: 1,
-            borderRadius: 16,
-            fontWeight: 600,
-          }}
-          onClick={handleLoginDialog}
-        >
-          Login
-        </Button>
       </Grid2>
-      {dialogs?.isOpenLogin && (
-        <Dialog
-          open={dialogs?.isOpenLogin}
-          onClose={handleLoginDialog}
-          aria-labelledby="responsive-dialog-title"
+
+      <Grid2
+        container
+        sx={{
+          height: "calc(100vh - 250px)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          px: 3,
+        }}
+      >
+        <Grid2
+          container
           sx={{
-            ".MuiPaper-root": {
-              padding: 2,
-            },
+            width: "100%",
+            maxWidth: 400,
+            padding: 2,
+            boxSizing: "border-box",
+            flexDirection: "column",
           }}
         >
-          <DialogTitle id="responsive-dialog-title">
-            <Typography variant="h4">Welcome Back</Typography>
-            <Typography variant="body2" sx={{ color: "text.disabled" }}>
-              Fill out the information below in order to access your account
-            </Typography>
-          </DialogTitle>
-          <DialogContent>
-            <Grid2 container sx={{ flexDirection: "column", gap: 2, pt: 2 }}>
-              <TextField
-                id="outlined-basic"
-                label="Email"
-                variant="outlined"
-                type="email"
-                value={account.username}
-                onChange={(e) => handleInputChange(e, "username")}
+          <Typography variant="h4">Welcome Back</Typography>
+          <Typography variant="body2" sx={{ color: "text.disabled" }}>
+            Fill out the information below in order to access your account
+          </Typography>
+
+          <Grid2 container sx={{ flexDirection: "column", gap: 2, pt: 2 }}>
+            <TextField
+              id="outlined-basic"
+              label="Email"
+              variant="outlined"
+              type="email"
+              value={account.username}
+              onChange={(e) => handleInputChange(e, "username")}
+              fullWidth
+            />
+            <FormControl sx={{ width: "100%" }} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-password">
+                Password
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showPassword
+                          ? "hide the password"
+                          : "display the password"
+                      }
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+                value={account.password}
+                onChange={(e) => handleInputChange(e, "password")}
+                fullWidth
               />
-              <FormControl sx={{ width: "100%" }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Password
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type={showPassword ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label={
-                          showPassword
-                            ? "hide the password"
-                            : "display the password"
-                        }
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        onMouseUp={handleMouseUpPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Password"
-                  value={account.password}
-                  onChange={(e) => handleInputChange(e, "password")}
-                />
-              </FormControl>
-            </Grid2>
-          </DialogContent>
-          <DialogActions sx={{ px: 3, pb: 3 }}>
+            </FormControl>
+          </Grid2>
+          <FormControlLabel
+            control={<Checkbox defaultChecked />}
+            label="Remember me"
+          />
+          <Box sx={{ pt: 2 }}>
             <Button
               autoFocus
               variant="contained"
@@ -162,9 +156,9 @@ function LoginPage() {
             >
               Sign In
             </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+          </Box>
+        </Grid2>
+      </Grid2>
     </React.Fragment>
   );
 }
