@@ -5,12 +5,14 @@ interface TypeWriterEffectProps {
   text: string;
   speed?: number;
   onPopoverOpen: (event: React.MouseEvent<HTMLElement>, link: string) => void;
+  onScroll: () => void;
 }
 
 const TypeWriterEffect: React.FC<TypeWriterEffectProps> = ({
   text,
   speed = 10,
   onPopoverOpen,
+  onScroll,
 }) => {
   const [displayedText, setDisplayedText] = useState("");
 
@@ -21,6 +23,7 @@ const TypeWriterEffect: React.FC<TypeWriterEffectProps> = ({
         const currentChar = text[index];
         if (currentChar !== undefined && currentChar !== null) {
           setDisplayedText((prev) => prev + currentChar);
+          onScroll();
         }
         index += 1;
       } else {
@@ -29,7 +32,7 @@ const TypeWriterEffect: React.FC<TypeWriterEffectProps> = ({
     }, speed);
 
     return () => clearInterval(intervalId);
-  }, [text, speed]);
+  }, [text, speed, onScroll]);
 
   return <span>{renderLinksInText(displayedText, onPopoverOpen)}</span>;
 };
