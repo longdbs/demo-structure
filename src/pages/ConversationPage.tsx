@@ -72,6 +72,7 @@ function ConversationPage() {
                   width: "50%",
                   alignSelf: "end",
                   borderRadius: 4,
+                  whiteSpace: "pre-line",
                 }}
               >
                 {qa.content}
@@ -86,6 +87,7 @@ function ConversationPage() {
                   padding: "20px",
                   maxWidth: "100%",
                   wordWrap: "break-word",
+                  whiteSpace: "pre-line",
                 }}
               >
                 {qaList[qaList.length - 1].type === "A" &&
