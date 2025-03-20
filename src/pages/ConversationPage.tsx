@@ -147,7 +147,7 @@ function ConversationPage() {
                   disableUnderline: true,
                 },
               }}
-              sx={{ width: "100%", height: "auto" }}
+              sx={{ width: "100%", height: "auto", whiteSpace: "pre-line" }}
               value={keyword}
               onChange={handleInputChange}
               onKeyDown={(e) => {
