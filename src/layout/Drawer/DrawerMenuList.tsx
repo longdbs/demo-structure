@@ -1,5 +1,6 @@
 import { ChatBubbleOutline } from "@mui/icons-material";
 import {
+  Avatar,
   Box,
   IconButton,
   List,
@@ -11,11 +12,17 @@ import {
 } from "@mui/material";
 import { drawerMenuList } from "../../consts/listCommon";
 import DrawerMenuItem from "./DrawerMenuItem";
+import logoCarelogix from "../../assets/logoCarelogix.png";
 
 function DrawerMenuList() {
   return (
     <Box sx={{ width: 240 }} role="presentation">
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
+        <Avatar
+          alt="Carelogix"
+          src={logoCarelogix}
+          sx={{ width: 30, height: 30 }}
+        />
         <Typography variant="h4" sx={{ fontWeight: 600 }}>
           Carelogix
         </Typography>

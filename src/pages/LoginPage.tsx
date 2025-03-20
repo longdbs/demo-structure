@@ -1,5 +1,7 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
+  Avatar,
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -20,7 +22,7 @@ import { useAuth } from "../context/AuthContext";
 import { useDebounce } from "../hooks/useDebounce";
 import useMultipleDialogs from "../hooks/useMultipleDialogs";
 import { UserLoginI } from "../types/user.type";
-
+import logoCarelogix from "../assets/logoCarelogix.png";
 function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -70,7 +72,14 @@ function LoginPage() {
   return (
     <React.Fragment>
       <Grid2 container sx={{ justifyContent: "space-between", p: 2 }}>
-        <Typography variant="h3">Carelogix</Typography>
+        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+          <Avatar
+            alt="Carelogix"
+            src={logoCarelogix}
+            sx={{ width: 60, height: 60 }}
+          />
+          <Typography variant="h3">Carelogix</Typography>
+        </Box>
         <Button
           variant="contained"
           sx={{
