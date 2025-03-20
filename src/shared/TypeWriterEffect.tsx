@@ -1,47 +1,34 @@
-import { Typography } from "@mui/material";
-import { styled } from "@mui/system";
+import React, { useEffect, useState } from "react";
 
-const TypewriterEffect = ({ text }: { text: string }) => {
-  const TypewriterText = styled(Typography)(({ theme }) => ({
-    display: "inline-block",
-    fontSize: "2rem",
-    fontFamily: "'Courier New', Courier, monospace",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    position: "relative",
-    maxWidth: "100%",
-    wordWrap: "break-word",
-    boxSizing: "border-box",
+interface TypeWriterEffectProps {
+  text: string;
+  speed?: number;
+}
 
-    "&::after": {
-      content: '""',
-      position: "absolute",
-      right: 0,
-      top: "0",
-      width: "2px",
-      height: "100%",
-      backgroundColor: "black",
-      animation: "blink 0.75s step-end infinite",
-    },
+const TypeWriterEffect: React.FC<TypeWriterEffectProps> = ({
+  text,
+  speed = 10,
+}) => {
+  const [displayedText, setDisplayedText] = useState("");
 
-    "@keyframes typing": {
-      "0%": {
-        clipPath: "inset(0 100% 0 0)",
-      },
-      "100%": {
-        clipPath: "inset(0 0 0 0)",
-      },
-    },
-    animation: "typing 4s steps(20) 1s 1 normal both",
+  useEffect(() => {
+    let index = 0;
+    const intervalId = setInterval(() => {
+      if (index < text.length) {
+        const currentChar = text[index];
+        if (currentChar !== undefined && currentChar !== null) {
+          setDisplayedText((prev) => prev + currentChar);
+        }
+        index += 1;
+      } else {
+        clearInterval(intervalId);
+      }
+    }, speed);
 
-    "@keyframes blink": {
-      "50%": {
-        backgroundColor: "transparent",
-      },
-    },
-  }));
+    return () => clearInterval(intervalId);
+  }, [text, speed]);
 
-  return <TypewriterText variant="h4">{text}</TypewriterText>;
+  return <span>{displayedText}</span>;
 };
 
-export default TypewriterEffect;
+export default TypeWriterEffect;

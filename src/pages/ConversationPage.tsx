@@ -12,6 +12,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "../hooks/useDebounce";
 import { QAI } from "../types/question.type";
+import TypeWriterEffect from "../shared/TypeWriterEffect";
 
 function ConversationPage() {
   const [selected, setSelected] = useState("general");
@@ -33,12 +34,11 @@ function ConversationPage() {
   }, [debouncedKeyword]);
 
   useEffect(() => {
-    console.log({ qaList });
     if (qaList[qaList?.length - 1]?.type === "Q") {
-      setQAList((prev) => [
-        ...prev,
-        { type: "A", content: qaList[qaList?.length - 1]?.content },
-      ]);
+      const lastQuestion = qaList[qaList.length - 1]?.content;
+      if (lastQuestion) {
+        setQAList((prev) => [...prev, { type: "A", content: lastQuestion }]);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qaList?.length]);
@@ -87,10 +87,11 @@ function ConversationPage() {
                 }}
               >
                 {qaList[qaList.length - 1].type === "A" &&
-                qaList.length - 1 === i
-                  ? // <TypeWriterEffect text={qa?.content || ""} />
-                    qa?.content
-                  : qa?.content}
+                qaList.length - 1 === i ? (
+                  <TypeWriterEffect text={qa?.content || ""} />
+                ) : (
+                  qa?.content
+                )}
               </Box>
             )}
           </React.Fragment>
