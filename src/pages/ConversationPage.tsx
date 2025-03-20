@@ -49,6 +49,11 @@ function ConversationPage() {
     const value = e.target.value;
     setKeyword(value);
   };
+  const handleScroll = () => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   useEffect(() => {
     setKeyword(debouncedKeyword);
   }, [debouncedKeyword]);
@@ -64,10 +69,13 @@ function ConversationPage() {
   }, [qaList?.length]);
 
   useEffect(() => {
+    console.log("qaList changed:", qaList);
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [qaList]);
+
+  console.log({ qaList });
 
   return (
     <React.Fragment>
@@ -116,6 +124,7 @@ function ConversationPage() {
                     <TypeWriterEffect
                       text={qa?.content || ""}
                       onPopoverOpen={handlePopoverOpen}
+                      onScroll={handleScroll}
                     />
                   ) : (
                     renderLinksInText(qa?.content || "", handlePopoverOpen)
