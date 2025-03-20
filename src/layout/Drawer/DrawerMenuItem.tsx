@@ -24,7 +24,7 @@ function DrawerMenuItem({ menu }: Props) {
         {menu?.icon && <ListItemIcon>{menu?.icon}</ListItemIcon>}
         <ListItemText
           primary={
-            <Typography variant="body2" style={{ fontWeight: "bold" }}>
+            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
               {menu?.name || ""}
             </Typography>
           }

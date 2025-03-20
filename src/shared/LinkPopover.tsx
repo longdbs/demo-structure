@@ -1,4 +1,4 @@
-import { Popover } from "@mui/material";
+import { Box, Popover } from "@mui/material";
 
 type LinkModalProps = {
   anchorEl: HTMLElement | null;
@@ -26,14 +26,14 @@ export const LinkPopover = ({
         horizontal: "center",
       }}
     >
-      <div style={{ padding: "10px", maxWidth: "300px" }}>
+      <Box sx={{ padding: "10px", maxWidth: "300px" }}>
         <p>{`You hovered over or clicked on the link: ${url}`}</p>
         <p>
           <a href={url} target="_blank" rel="noopener noreferrer">
             Visit link
           </a>
         </p>
-      </div>
+      </Box>
     </Popover>
   );
 };
