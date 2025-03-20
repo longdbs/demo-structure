@@ -11,8 +11,9 @@ import {
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "../hooks/useDebounce";
-import { QAI } from "../types/question.type";
+import { LinkPopover } from "../shared/LinkPopover";
 import TypeWriterEffect from "../shared/TypeWriterEffect";
+import { QAI } from "../types/question.type";
 import { renderLinksInText } from "../utils/renderLinksInText";
 
 function ConversationPage() {
@@ -21,6 +22,24 @@ function ConversationPage() {
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value);
   };
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [open, setOpen] = useState(false);
+  const [url, setUrl] = useState("");
+
+  const handlePopoverOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    link: string
+  ) => {
+    setUrl(link);
+    setAnchorEl(event.currentTarget);
+    setOpen(true);
+  };
+
+  const handlePopoverClose = () => {
+    setOpen(false);
+    setAnchorEl(null);
+  };
+
   const [keyword, setKeyword] = useState("");
   const [qaList, setQAList] = useState<QAI[]>([]);
   const debouncedKeyword = useDebounce(keyword, 500);
@@ -51,142 +70,154 @@ function ConversationPage() {
   }, [qaList]);
 
   return (
-    <Grid2 container sx={{ height: "100%", flexDirection: "column" }}>
-      <Grid2
-        sx={{
-          height: "70vh",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "auto",
-          gap: 2,
-          px: 2,
-        }}
-      >
-        {qaList?.map((qa, i) => (
-          <React.Fragment key={qa.type + i}>
-            {qa.type === "Q" && (
-              <Box
-                sx={{
-                  p: 2,
-                  bgcolor: "#D7DEEE",
-                  width: "50%",
-                  alignSelf: "end",
-                  borderRadius: 4,
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {qa.content}
-              </Box>
-            )}
-            {qa.type === "A" && (
-              <Box
-                sx={{
-                  p: 2,
-                }}
-                style={{
-                  padding: "20px",
-                  maxWidth: "100%",
-                  wordWrap: "break-word",
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {qaList[qaList.length - 1].type === "A" &&
-                qaList.length - 1 === i ? (
-                  <TypeWriterEffect text={qa?.content || ""} />
-                ) : (
-                  renderLinksInText(qa?.content || "")
-                )}
-              </Box>
-            )}
-          </React.Fragment>
-        ))}
-        <Box ref={messageEndRef} />
-      </Grid2>
-      <Grid2
-        container
-        sx={{
-          alignSelf: "end",
-          width: { xs: "90%", lg: "75%", xl: "80%" },
-          transform: {
-            xs: "translateX(-50%)",
-            xl: "translateX(-50%)",
-            "2xl": "translateX(-50%)",
-          },
-          mx: "auto",
-          mb: 6,
-          bgcolor: "background.paper",
-          borderRadius: 4,
-          display: "flex",
-          flexDirection: "column",
-          p: 2,
-          position: "fixed",
-          bottom: 0,
-          left: {
-            xs: "50%",
-            lg: "calc(50% + 120px)",
-          },
-          right: "auto",
-        }}
-      >
+    <React.Fragment>
+      <Grid2 container sx={{ height: "100%", flexDirection: "column" }}>
         <Grid2
           sx={{
+            height: "70vh",
             display: "flex",
-            justifyContent: "space-between",
-            pl: 2,
-            height: "auto",
+            flexDirection: "column",
+            overflow: "auto",
+            gap: 2,
+            px: 2,
           }}
         >
-          <Box sx={{ maxHeight: "300px", overflow: "auto", width: "100%" }}>
-            <TextField
-              id="standard-multiline-static"
-              multiline
-              placeholder="Ask anything"
-              variant="standard"
-              slotProps={{
-                input: {
-                  disableUnderline: true,
-                },
-              }}
-              sx={{ width: "100%", height: "auto", whiteSpace: "pre-line" }}
-              value={keyword}
-              onChange={handleInputChange}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  setQAList((prev) => [
-                    ...prev,
-                    { type: "Q", content: keyword },
-                  ]);
-                  setKeyword("");
-                }
-              }}
-            />
-          </Box>
-          <IconButton sx={{ alignSelf: "start" }}>
-            <KeyboardVoiceRounded />
-          </IconButton>
+          {qaList?.map((qa, i) => (
+            <React.Fragment key={qa.type + i}>
+              {qa.type === "Q" && (
+                <Box
+                  sx={{
+                    p: 2,
+                    bgcolor: "#D7DEEE",
+                    width: "50%",
+                    alignSelf: "end",
+                    borderRadius: 4,
+                    whiteSpace: "pre-line",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {qa.content}
+                </Box>
+              )}
+              {qa.type === "A" && (
+                <Box
+                  sx={{
+                    p: 2,
+                  }}
+                  style={{
+                    padding: "20px",
+                    maxWidth: "100%",
+                    wordWrap: "break-word",
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {qaList[qaList.length - 1].type === "A" &&
+                  qaList.length - 1 === i ? (
+                    <TypeWriterEffect
+                      text={qa?.content || ""}
+                      onPopoverOpen={handlePopoverOpen}
+                    />
+                  ) : (
+                    renderLinksInText(qa?.content || "", handlePopoverOpen)
+                  )}
+                </Box>
+              )}
+            </React.Fragment>
+          ))}
+          <Box ref={messageEndRef} />
         </Grid2>
-        <Grid2 sx={{ display: "flex", justifyContent: "space-between" }}>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <Select
-              value={selected}
-              onChange={handleChange}
-              displayEmpty
-              inputProps={{ "aria-label": "Without label" }}
-              variant="standard"
-              disableUnderline
-            >
-              <MenuItem value="general">General</MenuItem>
-              <MenuItem value="ndis">NDIS</MenuItem>
-              <MenuItem value="agedCare">Aged care</MenuItem>
-            </Select>
-          </FormControl>
-          <IconButton sx={{ alignSelf: "start" }}>
-            <Image />
-          </IconButton>
+        <Grid2
+          container
+          sx={{
+            alignSelf: "end",
+            width: { xs: "90%", lg: "75%", xl: "80%" },
+            transform: {
+              xs: "translateX(-50%)",
+              xl: "translateX(-50%)",
+              "2xl": "translateX(-50%)",
+            },
+            mx: "auto",
+            mb: 6,
+            bgcolor: "background.paper",
+            borderRadius: 4,
+            display: "flex",
+            flexDirection: "column",
+            p: 2,
+            position: "fixed",
+            bottom: 0,
+            left: {
+              xs: "50%",
+              lg: "calc(50% + 120px)",
+            },
+            right: "auto",
+          }}
+        >
+          <Grid2
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              pl: 2,
+              height: "auto",
+            }}
+          >
+            <Box sx={{ maxHeight: "300px", overflow: "auto", width: "100%" }}>
+              <TextField
+                id="standard-multiline-static"
+                multiline
+                placeholder="Ask anything"
+                variant="standard"
+                slotProps={{
+                  input: {
+                    disableUnderline: true,
+                  },
+                }}
+                sx={{ width: "100%", height: "auto", whiteSpace: "pre-line" }}
+                value={keyword}
+                onChange={handleInputChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    setQAList((prev) => [
+                      ...prev,
+                      { type: "Q", content: keyword },
+                    ]);
+                    setKeyword("");
+                  }
+                }}
+              />
+            </Box>
+            <IconButton sx={{ alignSelf: "start" }}>
+              <KeyboardVoiceRounded />
+            </IconButton>
+          </Grid2>
+          <Grid2 sx={{ display: "flex", justifyContent: "space-between" }}>
+            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+              <Select
+                value={selected}
+                onChange={handleChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+                variant="standard"
+                disableUnderline
+              >
+                <MenuItem value="general">General</MenuItem>
+                <MenuItem value="ndis">NDIS</MenuItem>
+                <MenuItem value="agedCare">Aged care</MenuItem>
+              </Select>
+            </FormControl>
+            <IconButton sx={{ alignSelf: "start" }}>
+              <Image />
+            </IconButton>
+          </Grid2>
         </Grid2>
       </Grid2>
-    </Grid2>
+      <LinkPopover
+        anchorEl={anchorEl}
+        onClose={handlePopoverClose}
+        open={open}
+        url={url}
+      />
+    </React.Fragment>
   );
 }
 

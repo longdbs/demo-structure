@@ -1,17 +1,22 @@
-export const renderLinksInText = (text: string) => {
+import { Button } from "@mui/material";
+
+export const renderLinksInText = (
+  text: string,
+  onPopoverOpen: (event: React.MouseEvent<HTMLElement>, link: string) => void
+) => {
   const urlRegex = /(\bhttps?:\/\/[^\s]+|www\.[^\s]+\b)/g;
   return text.split(urlRegex).map((part, index) => {
     if (part.match(urlRegex)) {
       return (
-        <a
+        <Button
           key={index}
-          href={part}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "blue", textDecoration: "underline" }}
+          sx={{ color: "primary.dark" }}
+          onClick={(e) => {
+            onPopoverOpen(e, part);
+          }}
         >
           {part}
-        </a>
+        </Button>
       );
     }
     return part;

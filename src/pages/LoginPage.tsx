@@ -115,7 +115,7 @@ function LoginPage() {
             <Grid2 container sx={{ flexDirection: "column", gap: 2, pt: 2 }}>
               <TextField
                 id="outlined-basic"
-                label="Outlined"
+                label="Email"
                 variant="outlined"
                 type="email"
                 value={account.username}

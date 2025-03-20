@@ -4,11 +4,13 @@ import { renderLinksInText } from "../utils/renderLinksInText";
 interface TypeWriterEffectProps {
   text: string;
   speed?: number;
+  onPopoverOpen: (event: React.MouseEvent<HTMLElement>, link: string) => void;
 }
 
 const TypeWriterEffect: React.FC<TypeWriterEffectProps> = ({
   text,
   speed = 10,
+  onPopoverOpen,
 }) => {
   const [displayedText, setDisplayedText] = useState("");
 
@@ -29,7 +31,7 @@ const TypeWriterEffect: React.FC<TypeWriterEffectProps> = ({
     return () => clearInterval(intervalId);
   }, [text, speed]);
 
-  return <span>{renderLinksInText(displayedText)}</span>;
+  return <span>{renderLinksInText(displayedText, onPopoverOpen)}</span>;
 };
 
 export default TypeWriterEffect;
