@@ -9,12 +9,13 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "../hooks/useDebounce";
 import { QAI } from "../types/question.type";
 
 function ConversationPage() {
   const [selected, setSelected] = useState("general");
+  const messageEndRef = useRef<HTMLDivElement>(null);
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value);
   };
@@ -41,6 +42,12 @@ function ConversationPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qaList?.length]);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [qaList]);
 
   return (
     <Grid2 container sx={{ height: "100%", flexDirection: "column" }}>
@@ -88,6 +95,7 @@ function ConversationPage() {
             )}
           </React.Fragment>
         ))}
+        <Box ref={messageEndRef} />
       </Grid2>
       <Grid2
         container
@@ -130,6 +138,7 @@ function ConversationPage() {
               onChange={handleInputChange}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
+                  e.preventDefault();
                   setQAList((prev) => [
                     ...prev,
                     { type: "Q", content: keyword },
