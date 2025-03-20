@@ -32,7 +32,8 @@ const TypeWriterEffect: React.FC<TypeWriterEffectProps> = ({
     }, speed);
 
     return () => clearInterval(intervalId);
-  }, [text, speed, onScroll]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, speed]);
 
   return <span>{renderLinksInText(displayedText, onPopoverOpen)}</span>;
 };

@@ -75,6 +75,8 @@ function ConversationPage() {
     }
   }, [qaList]);
 
+  console.log({ qaList });
+
   return (
     <React.Fragment>
       <Grid2 container sx={{ height: "100%", flexDirection: "column" }}>
