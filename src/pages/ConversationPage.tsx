@@ -9,20 +9,92 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDebounce } from "../hooks/useDebounce";
+import { QAI } from "../types/question.type";
 
 function ConversationPage() {
   const [selected, setSelected] = useState("general");
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value);
   };
+  const [keyword, setKeyword] = useState("");
+  const [qaList, setQAList] = useState<QAI[]>([]);
+  const debouncedKeyword = useDebounce(keyword, 500);
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = e.target.value;
+    setKeyword(value);
+  };
+  useEffect(() => {
+    setKeyword(debouncedKeyword);
+  }, [debouncedKeyword]);
+
+  useEffect(() => {
+    console.log({ qaList });
+    if (qaList[qaList?.length - 1]?.type === "Q") {
+      setQAList((prev) => [
+        ...prev,
+        { type: "A", content: qaList[qaList?.length - 1]?.content },
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qaList?.length]);
+
   return (
-    <Grid2 container sx={{ height: "100%" }}>
+    <Grid2 container sx={{ height: "100%", flexDirection: "column" }}>
+      <Grid2
+        sx={{
+          height: "70vh",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "auto",
+          gap: 2,
+        }}
+      >
+        {qaList?.map((qa, i) => (
+          <React.Fragment key={qa.type + i}>
+            {qa.type === "Q" && (
+              <Box
+                sx={{
+                  p: 2,
+                  bgcolor: "#D7DEEE",
+                  width: "50%",
+                  alignSelf: "end",
+                  borderRadius: 4,
+                }}
+              >
+                {qa.content}
+              </Box>
+            )}
+            {qa.type === "A" && (
+              <Box
+                sx={{
+                  p: 2,
+                }}
+                style={{
+                  padding: "20px",
+                  maxWidth: "100%",
+                  wordWrap: "break-word",
+                }}
+              >
+                {qaList[qaList.length - 1].type === "A" &&
+                qaList.length - 1 === i
+                  ? // <TypeWriterEffect text={qa?.content || ""} />
+                    qa?.content
+                  : qa?.content}
+              </Box>
+            )}
+          </React.Fragment>
+        ))}
+      </Grid2>
       <Grid2
         container
         sx={{
           alignSelf: "end",
           width: "80%",
+          transform: "translate(-5%)",
           mx: "auto",
           mb: 6,
           bgcolor: "background.paper",
@@ -30,6 +102,8 @@ function ConversationPage() {
           display: "flex",
           flexDirection: "column",
           p: 2,
+          position: "fixed",
+          bottom: 0,
         }}
       >
         <Grid2
@@ -52,6 +126,17 @@ function ConversationPage() {
                 },
               }}
               sx={{ width: "100%", height: "auto" }}
+              value={keyword}
+              onChange={handleInputChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setQAList((prev) => [
+                    ...prev,
+                    { type: "Q", content: keyword },
+                  ]);
+                  setKeyword("");
+                }
+              }}
             />
           </Box>
           <IconButton sx={{ alignSelf: "start" }}>
