@@ -58,6 +58,7 @@ function ConversationPage() {
           flexDirection: "column",
           overflow: "auto",
           gap: 2,
+          px: 2,
         }}
       >
         {qaList?.map((qa, i) => (
