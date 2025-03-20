@@ -13,6 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "../hooks/useDebounce";
 import { QAI } from "../types/question.type";
 import TypeWriterEffect from "../shared/TypeWriterEffect";
+import { renderLinksInText } from "../utils/renderLinksInText";
 
 function ConversationPage() {
   const [selected, setSelected] = useState("general");
@@ -91,7 +92,7 @@ function ConversationPage() {
                 qaList.length - 1 === i ? (
                   <TypeWriterEffect text={qa?.content || ""} />
                 ) : (
-                  qa?.content
+                  renderLinksInText(qa?.content || "")
                 )}
               </Box>
             )}

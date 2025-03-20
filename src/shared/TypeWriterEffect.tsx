@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { renderLinksInText } from "../utils/renderLinksInText";
 
 interface TypeWriterEffectProps {
   text: string;
@@ -28,7 +29,7 @@ const TypeWriterEffect: React.FC<TypeWriterEffectProps> = ({
     return () => clearInterval(intervalId);
   }, [text, speed]);
 
-  return <span>{displayedText}</span>;
+  return <span>{renderLinksInText(displayedText)}</span>;
 };
 
 export default TypeWriterEffect;
