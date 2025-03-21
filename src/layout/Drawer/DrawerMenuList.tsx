@@ -13,8 +13,10 @@ import {
 import { drawerMenuList } from "../../consts/listCommon";
 import DrawerMenuItem from "./DrawerMenuItem";
 import logoCarelogix from "../../assets/logoCarelogix.png";
+import { useConversation } from "../../context/ConversationContext";
 
 function DrawerMenuList() {
+  const { onResetConversation } = useConversation();
   return (
     <Box sx={{ width: 240 }} role="presentation">
       <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
@@ -45,7 +47,7 @@ function DrawerMenuList() {
           }
           disablePadding
         >
-          <ListItemButton role={undefined} onClick={() => {}} dense>
+          <ListItemButton role={undefined} onClick={onResetConversation} dense>
             <ListItemText primary={`New chat`} />
           </ListItemButton>
         </ListItem>

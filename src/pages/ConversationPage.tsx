@@ -10,14 +10,15 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+import { useConversation } from "../context/ConversationContext";
 import { useDebounce } from "../hooks/useDebounce";
+import ImageComponent from "../shared/Image";
 import { LinkPopover } from "../shared/LinkPopover";
 import TypeWriterEffect from "../shared/TypeWriterEffect";
-import { QAI } from "../types/question.type";
 import { renderLinksInText } from "../utils/renderLinksInText";
-import ImageComponent from "../shared/Image";
 
 function ConversationPage() {
+  const { onQAList, qaList } = useConversation();
   const [selected, setSelected] = useState("general");
   const messageEndRef = useRef<HTMLDivElement>(null);
   const heightChatRef = useRef<HTMLDivElement>(null);
@@ -25,7 +26,6 @@ function ConversationPage() {
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [keyword, setKeyword] = useState("");
-  const [qaList, setQAList] = useState<QAI[]>([]);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [heightChatbox, setHeightChatbox] = useState<number>(100);
   const debouncedKeyword = useDebounce(keyword, 500);
@@ -87,7 +87,7 @@ function ConversationPage() {
     if (qaList[qaList?.length - 1]?.type === "Q") {
       const lastQuestion = qaList[qaList.length - 1]?.content;
       if (lastQuestion) {
-        setQAList((prev) => [...prev, { type: "A", content: lastQuestion }]);
+        onQAList({ type: "A", content: lastQuestion });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -246,14 +246,11 @@ function ConversationPage() {
                         />
                       ) : null;
 
-                      setQAList((prev) => [
-                        ...prev,
-                        {
-                          type: "Q",
-                          content: questionContent,
-                          image: imageContent,
-                        },
-                      ]);
+                      onQAList({
+                        type: "Q",
+                        content: questionContent,
+                        image: imageContent,
+                      });
                       setKeyword("");
                       setSelectedImage(null);
                     }
