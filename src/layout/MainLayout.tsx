@@ -1,21 +1,21 @@
+import { Logout, Menu as MenuIcon } from "@mui/icons-material";
 import {
   Box,
   Button,
   IconButton,
-  ThemeProvider,
-  Menu,
-  MenuList,
-  MenuItem,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
+  MenuList,
+  ThemeProvider,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { drawerWidth } from "../consts/listCommon";
+import { useAuth } from "../context/AuthContext";
 import { theme } from "../themes/theme";
 import DrawerWrapper from "./Drawer/DrawerWrapper";
-import { Logout, Menu as MenuIcon, Settings } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -103,12 +103,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         }}
       >
         <MenuList>
-          <MenuItem>
-            <ListItemIcon>
-              <Settings fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Setting</ListItemText>
-          </MenuItem>
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>
               <Logout fontSize="small" />

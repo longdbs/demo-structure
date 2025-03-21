@@ -25,7 +25,10 @@ function ConversationPage() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
-
+  const [keyword, setKeyword] = useState("");
+  const [qaList, setQAList] = useState<QAI[]>([]);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const debouncedKeyword = useDebounce(keyword, 500);
   const handlePopoverOpen = (
     event: React.MouseEvent<HTMLElement>,
     link: string
@@ -40,9 +43,27 @@ function ConversationPage() {
     setAnchorEl(null);
   };
 
-  const [keyword, setKeyword] = useState("");
-  const [qaList, setQAList] = useState<QAI[]>([]);
-  const debouncedKeyword = useDebounce(keyword, 500);
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+      setSelectedImage(file);
+    }
+  };
+  //TODO: chỉnh sửa lại file Image cho phù hợp
+  const renderSelectedImage = () => {
+    if (selectedImage) {
+      const imageUrl = URL.createObjectURL(selectedImage);
+      return (
+        <Box
+          component="img"
+          src={imageUrl}
+          alt="Selected"
+          sx={{ width: "100px", height: "100px", mb: "10px" }}
+        />
+      );
+    }
+    return null;
+  };
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -161,6 +182,7 @@ function ConversationPage() {
             right: "auto",
           }}
         >
+          {renderSelectedImage()}
           <Grid2
             sx={{
               display: "flex",
@@ -215,8 +237,21 @@ function ConversationPage() {
               </Select>
             </FormControl>
             <IconButton sx={{ alignSelf: "start" }}>
-              <Image />
+              <Box
+                component="label"
+                sx={{ cursor: "pointer" }}
+                htmlFor="image-upload"
+              >
+                <Image />
+              </Box>
             </IconButton>
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleImageChange}
+            />
           </Grid2>
         </Grid2>
       </Grid2>

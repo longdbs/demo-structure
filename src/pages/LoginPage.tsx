@@ -96,8 +96,13 @@ function LoginPage() {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h4">Welcome Back</Typography>
-          <Typography variant="body2" sx={{ color: "text.disabled" }}>
+          <Typography variant="h4" sx={{ textAlign: "center" }}>
+            Welcome Back
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ color: "text.disabled", whiteSpace: "nowrap" }}
+          >
             Fill out the information below in order to access your account
           </Typography>
 
