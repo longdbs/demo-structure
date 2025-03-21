@@ -140,8 +140,8 @@ function ConversationPage() {
                   sx={{
                     p: 2,
                     bgcolor: "#D7DEEE",
-                    width: "50%",
-                    alignSelf: "end",
+                    width: { xs: "90%", lg: "50%" },
+                    alignSelf: "center",
                     borderRadius: 4,
                     whiteSpace: "pre-line",
                     wordBreak: "break-word",
@@ -157,12 +157,13 @@ function ConversationPage() {
                 <Box
                   sx={{
                     p: 2,
-                  }}
-                  style={{
+                    alignSelf: "start",
                     padding: "20px",
-                    maxWidth: "100%",
+                    maxWidth: { xs: "90%", lg: "50%" },
                     wordWrap: "break-word",
                     whiteSpace: "pre-wrap",
+                    justifyContent: "center",
+                    paddingLeft: { xs: "5%", lg: "25%" },
                     ...(qa.content &&
                       !qa.content.includes(" ") &&
                       !qa.content.includes("\n") && {
