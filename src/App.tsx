@@ -6,10 +6,11 @@ import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import LoginPage from "./pages/LoginPage";
 import ConversationPage from "./pages/ConversationPage";
+import { useAuth } from "./context/AuthContext";
 
 const App: React.FC = () => {
   const { theme } = useContext(ThemeContext);
-
+  const { username } = useAuth();
   return (
     <div
       style={{
@@ -24,7 +25,7 @@ const App: React.FC = () => {
             path="/"
             element={
               <MainLayout>
-                <LoginPage />
+                {!!username ? <ConversationPage /> : <LoginPage />}
               </MainLayout>
             }
           />
