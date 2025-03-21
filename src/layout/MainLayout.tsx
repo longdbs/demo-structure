@@ -61,6 +61,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           height: "100%",
           overflowY: "auto",
           flexDirection: "column",
+          bgcolor: "#EFEDE5",
         }}
       >
         {!!username && (

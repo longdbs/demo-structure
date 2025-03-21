@@ -122,7 +122,10 @@ function ConversationPage() {
   }, [qaList, keyword, selectedImage]);
   return (
     <React.Fragment>
-      <Grid2 container sx={{ height: "100%", flexDirection: "column" }}>
+      <Grid2
+        container
+        sx={{ height: "100%", flexDirection: "column", bgcolor: "#EFEDE5" }}
+      >
         <Grid2
           sx={{
             height: `calc(100vh - ${heightChatbox + 150}px)`,
@@ -133,60 +136,62 @@ function ConversationPage() {
             px: 2,
           }}
         >
-          {qaList?.map((qa, i) => (
-            <React.Fragment key={qa.type + i}>
-              {qa.type === "Q" && (
-                <Box
-                  sx={{
-                    p: 2,
-                    bgcolor: "#D7DEEE",
-                    width: { xs: "90%", lg: "50%" },
-                    alignSelf: "center",
-                    borderRadius: 4,
-                    whiteSpace: "pre-line",
-                    wordBreak: "break-word",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  {qa?.image && qa?.image}
-                  {qa.content}
-                </Box>
-              )}
-              {qa.type === "A" && (
-                <Box
-                  sx={{
-                    p: 2,
-                    alignSelf: "start",
-                    padding: "20px",
-                    maxWidth: { xs: "90%", lg: "50%" },
-                    wordWrap: "break-word",
-                    whiteSpace: "pre-wrap",
-                    justifyContent: "center",
-                    paddingLeft: { xs: "5%", lg: "25%" },
-                    ...(qa.content &&
-                      !qa.content.includes(" ") &&
-                      !qa.content.includes("\n") && {
-                        wordBreak: "break-word",
-                        whiteSpace: "normal",
-                      }),
-                  }}
-                >
-                  {qaList[qaList.length - 1].type === "A" &&
-                  qaList.length - 1 === i ? (
-                    <TypeWriterEffect
-                      text={qa?.content || ""}
-                      onPopoverOpen={handlePopoverOpen}
-                      onScroll={handleScroll}
-                    />
-                  ) : (
-                    renderLinksInText(qa?.content || "", handlePopoverOpen)
-                  )}
-                </Box>
-              )}
-            </React.Fragment>
-          ))}
-          <Box ref={messageEndRef} />
+          <Box sx={{ width: { xs: "90%", lg: "50%" }, mx: "auto" }}>
+            {qaList?.map((qa, i) => (
+              <React.Fragment key={qa.type + i}>
+                {qa.type === "Q" && (
+                  <Box
+                    sx={{
+                      p: 2,
+                      bgcolor: "background.paper",
+                      width: { xs: "95%", sm: "90%", lg: "80%", xl: "65%" },
+                      alignSelf: "center",
+                      borderRadius: 4,
+                      whiteSpace: "pre-line",
+                      wordBreak: "break-word",
+                      display: "flex",
+                      flexDirection: "column",
+                      marginLeft: { xs: 0, lg: "12%", xl: "25%" },
+                    }}
+                  >
+                    {qa?.image && qa?.image}
+                    {qa.content}
+                  </Box>
+                )}
+                {qa.type === "A" && (
+                  <Box
+                    sx={{
+                      p: 2,
+                      alignSelf: "start",
+                      padding: "20px",
+                      maxWidth: "90%",
+                      wordWrap: "break-word",
+                      whiteSpace: "pre-wrap",
+                      justifyContent: "center",
+                      ...(qa.content &&
+                        !qa.content.includes(" ") &&
+                        !qa.content.includes("\n") && {
+                          wordBreak: "break-word",
+                          whiteSpace: "normal",
+                        }),
+                    }}
+                  >
+                    {qaList[qaList.length - 1].type === "A" &&
+                    qaList.length - 1 === i ? (
+                      <TypeWriterEffect
+                        text={qa?.content || ""}
+                        onPopoverOpen={handlePopoverOpen}
+                        onScroll={handleScroll}
+                      />
+                    ) : (
+                      renderLinksInText(qa?.content || "", handlePopoverOpen)
+                    )}
+                  </Box>
+                )}
+              </React.Fragment>
+            ))}
+            <Box ref={messageEndRef} />
+          </Box>
         </Grid2>
         <Grid2
           ref={heightChatRef}
@@ -201,7 +206,8 @@ function ConversationPage() {
             },
             mx: "auto",
             mb: 6,
-            bgcolor: "background.paper",
+            bgcolor: "background.default",
+            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
             borderRadius: 4,
             display: "flex",
             flexDirection: "column",
@@ -265,7 +271,7 @@ function ConversationPage() {
                 }}
               />
             </Box>
-            <IconButton sx={{ alignSelf: "start" }}>
+            <IconButton sx={{ alignSelf: "start", color: "text.primary" }}>
               <KeyboardVoiceRounded />
             </IconButton>
           </Grid2>
@@ -284,7 +290,7 @@ function ConversationPage() {
                 <MenuItem value="agedCare">Aged care</MenuItem>
               </Select>
             </FormControl>
-            <IconButton sx={{ alignSelf: "start" }}>
+            <IconButton sx={{ alignSelf: "start", color: "text.primary" }}>
               <Box
                 component="label"
                 sx={{ cursor: "pointer" }}

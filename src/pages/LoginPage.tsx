@@ -103,7 +103,14 @@ function LoginPage() {
 
   return (
     <React.Fragment>
-      <Grid2 container sx={{ justifyContent: "space-between", p: 2 }}>
+      <Grid2
+        container
+        sx={{
+          bgcolor: "background.default",
+          justifyContent: "space-between",
+          p: 2,
+        }}
+      >
         <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
           <Avatar
             alt="Carelogix"
@@ -123,6 +130,7 @@ function LoginPage() {
           justifyContent: "center",
           alignItems: "center",
           px: 3,
+          bgcolor: "background.default",
         }}
       >
         <Grid2
