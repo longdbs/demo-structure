@@ -136,13 +136,7 @@ function LoginPage() {
           }}
         >
           <Typography variant="h4" sx={{ textAlign: "center" }}>
-            Welcome Back
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "text.disabled", whiteSpace: "nowrap" }}
-          >
-            Fill out the information below in order to access your account
+            Sign In
           </Typography>
 
           <Grid2 container sx={{ flexDirection: "column", gap: 2, pt: 2 }}>

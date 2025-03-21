@@ -162,7 +162,13 @@ function ConversationPage() {
                     padding: "20px",
                     maxWidth: "100%",
                     wordWrap: "break-word",
-                    whiteSpace: "pre-line",
+                    whiteSpace: "pre-wrap",
+                    ...(qa.content &&
+                      !qa.content.includes(" ") &&
+                      !qa.content.includes("\n") && {
+                        wordBreak: "break-word",
+                        whiteSpace: "normal",
+                      }),
                   }}
                 >
                   {qaList[qaList.length - 1].type === "A" &&
