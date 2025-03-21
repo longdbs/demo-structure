@@ -124,7 +124,7 @@ function ConversationPage() {
     <React.Fragment>
       <Grid2
         container
-        sx={{ height: "100%", flexDirection: "column", bgcolor: "#EFEDE5" }}
+        sx={{ height: "100%", flexDirection: "column", bgcolor: "#f8f8ee" }}
       >
         <Grid2
           sx={{
