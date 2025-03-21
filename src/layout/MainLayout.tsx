@@ -61,13 +61,18 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           height: "100%",
           overflowY: "auto",
           flexDirection: "column",
+          bgcolor: "background.default",
         }}
       >
         {!!username && (
           <Box
             sx={{
               display: "flex",
-              justifyContent: { xs: "space-between", lg: "flex-end" },
+              justifyContent: {
+                xs: "space-between",
+                lg: "flex-end",
+              },
+              bgcolor: "#f8f8ee",
               p: 2,
             }}
           >

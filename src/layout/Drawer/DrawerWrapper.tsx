@@ -21,7 +21,7 @@ export default function DrawerWrapper({ onDrawerToggle, isMobileOpen }: Props) {
             transition: "background-color 0.3s ease",
             overflowX: "hidden",
             height: "100vh",
-            bgcolor: "background.default",
+            bgcolor: "background.paper",
             border: "none",
           },
         }}
