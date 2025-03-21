@@ -46,6 +46,7 @@ function LoginPage() {
 
   const validateForm = () => {
     const validationErrors: any = {};
+
     if (!account.username) {
       validationErrors.username = "Email is required!";
     } else if (
@@ -53,6 +54,7 @@ function LoginPage() {
     ) {
       validationErrors.username = "Invalid email address!";
     }
+
     if (!account.password) {
       validationErrors.password = "Password is required!";
     } else if (account.password.length < 6) {
@@ -69,8 +71,9 @@ function LoginPage() {
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
+
     setErrors({});
-    login(account?.username);
+    login(account.username);
     navigate("/conversation", { replace: true });
   };
 
@@ -94,11 +97,8 @@ function LoginPage() {
   };
 
   useEffect(() => {
-    setAccount((prevAccount) => ({
-      ...prevAccount,
-      username: debouncedUsername,
-      password: debouncedPassword,
-    }));
+    validateForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedUsername, debouncedPassword]);
 
   return (
@@ -189,9 +189,14 @@ function LoginPage() {
                 onChange={(e) => handleInputChange(e, "password")}
                 fullWidth
               />
-              <FormHelperText>{errors.password}</FormHelperText>
+              <FormHelperText
+                sx={{ visibility: errors.password ? "visible" : "hidden" }}
+              >
+                {errors.password}
+              </FormHelperText>
             </FormControl>
           </Grid2>
+
           <FormControlLabel
             control={<Checkbox defaultChecked />}
             label="Remember me"
@@ -202,6 +207,7 @@ function LoginPage() {
               variant="contained"
               sx={{ width: "100%", p: 1 }}
               onClick={handleSignIn}
+              disabled={!account.username || !account.password}
             >
               Sign In
             </Button>
