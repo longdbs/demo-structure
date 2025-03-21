@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface ImageProps {
   src: string;
@@ -8,6 +9,7 @@ interface ImageProps {
   height?: string | number;
   objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
   placeholder?: string;
+  onRemove?: () => void;
 }
 
 const ImageComponent: React.FC<ImageProps> = ({
@@ -17,12 +19,23 @@ const ImageComponent: React.FC<ImageProps> = ({
   height = "auto",
   objectFit = "cover",
   placeholder = "",
+  onRemove,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isImageDeleted, setIsImageDeleted] = useState(false);
 
   const handleLoad = () => {
     setIsLoading(false);
   };
+
+  const handleDelete = () => {
+    setIsImageDeleted(true);
+    onRemove?.();
+  };
+
+  if (isImageDeleted) {
+    return null;
+  }
 
   return (
     <Box
@@ -67,6 +80,24 @@ const ImageComponent: React.FC<ImageProps> = ({
           transition: "visibility 0s 0.5s",
         }}
       />
+      {!!onRemove && (
+        <IconButton
+          onClick={handleDelete}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            borderRadius: "50%",
+            boxShadow: 2,
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
+            },
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
     </Box>
   );
 };

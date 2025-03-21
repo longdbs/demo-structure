@@ -15,20 +15,23 @@ import { LinkPopover } from "../shared/LinkPopover";
 import TypeWriterEffect from "../shared/TypeWriterEffect";
 import { QAI } from "../types/question.type";
 import { renderLinksInText } from "../utils/renderLinksInText";
+import ImageComponent from "../shared/Image";
 
 function ConversationPage() {
   const [selected, setSelected] = useState("general");
   const messageEndRef = useRef<HTMLDivElement>(null);
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelected(event.target.value);
-  };
+  const heightChatRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [keyword, setKeyword] = useState("");
   const [qaList, setQAList] = useState<QAI[]>([]);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [heightChatbox, setHeightChatbox] = useState<number>(100);
   const debouncedKeyword = useDebounce(keyword, 500);
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelected(event.target.value);
+  };
   const handlePopoverOpen = (
     event: React.MouseEvent<HTMLElement>,
     link: string
@@ -49,16 +52,17 @@ function ConversationPage() {
       setSelectedImage(file);
     }
   };
-  //TODO: chỉnh sửa lại file Image cho phù hợp
   const renderSelectedImage = () => {
     if (selectedImage) {
       const imageUrl = URL.createObjectURL(selectedImage);
       return (
-        <Box
-          component="img"
-          src={imageUrl}
+        <ImageComponent
+          height={100}
+          width={100}
           alt="Selected"
-          sx={{ width: "100px", height: "100px", mb: "10px" }}
+          src={imageUrl}
+          onRemove={() => setSelectedImage(null)}
+          objectFit="contain"
         />
       );
     }
@@ -88,22 +92,40 @@ function ConversationPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qaList?.length]);
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(() => {
+      if (heightChatRef.current) {
+        setHeightChatbox(heightChatRef.current.offsetHeight);
+      }
+    });
+
+    if (heightChatRef.current) {
+      resizeObserver.observe(heightChatRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
-    console.log("qaList changed:", qaList);
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [qaList]);
 
-  console.log({ qaList });
-
+  useEffect(() => {
+    if (heightChatRef.current) {
+      const chatBoxHeight = heightChatRef.current.offsetHeight;
+      setHeightChatbox(!keyword ? 100 : chatBoxHeight);
+    }
+  }, [qaList, keyword, selectedImage]);
   return (
     <React.Fragment>
       <Grid2 container sx={{ height: "100%", flexDirection: "column" }}>
         <Grid2
           sx={{
-            height: "70vh",
+            height: `calc(100vh - ${heightChatbox + 150}px)`,
             display: "flex",
             flexDirection: "column",
             overflow: "auto",
@@ -123,8 +145,11 @@ function ConversationPage() {
                     borderRadius: 4,
                     whiteSpace: "pre-line",
                     wordBreak: "break-word",
+                    display: "flex",
+                    flexDirection: "column",
                   }}
                 >
+                  {qa?.image && qa?.image}
                   {qa.content}
                 </Box>
               )}
@@ -157,6 +182,7 @@ function ConversationPage() {
           <Box ref={messageEndRef} />
         </Grid2>
         <Grid2
+          ref={heightChatRef}
           container
           sx={{
             alignSelf: "end",
@@ -180,6 +206,7 @@ function ConversationPage() {
               lg: "calc(50% + 120px)",
             },
             right: "auto",
+            minHeight: heightChatbox,
           }}
         >
           {renderSelectedImage()}
@@ -208,11 +235,28 @@ function ConversationPage() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    setQAList((prev) => [
-                      ...prev,
-                      { type: "Q", content: keyword },
-                    ]);
-                    setKeyword("");
+                    if (keyword || selectedImage) {
+                      const questionContent = keyword;
+                      const imageContent = selectedImage ? (
+                        <ImageComponent
+                          src={URL.createObjectURL(selectedImage)}
+                          alt="Selected"
+                          width={100}
+                          height={100}
+                        />
+                      ) : null;
+
+                      setQAList((prev) => [
+                        ...prev,
+                        {
+                          type: "Q",
+                          content: questionContent,
+                          image: imageContent,
+                        },
+                      ]);
+                      setKeyword("");
+                      setSelectedImage(null);
+                    }
                   }
                 }}
               />
