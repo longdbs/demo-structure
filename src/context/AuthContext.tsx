@@ -1,4 +1,11 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
+import Cookies from "js-cookie";
 
 interface AuthContextType {
   username: string | null;
@@ -15,12 +22,25 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [username, setUsername] = useState<string | null>(null);
 
+  useEffect(() => {
+    const token = Cookies.get("accessToken");
+    if (token) {
+      setUsername(token);
+    }
+  }, []);
+
   const login = (name: string) => {
     setUsername(name);
+    Cookies.set("accessToken", name, {
+      expires: 1,
+      // secure: true,
+      // sameSite: "Strict",
+    });
   };
 
   const logout = () => {
     setUsername(null);
+    Cookies.remove("accessToken");
   };
 
   return (
