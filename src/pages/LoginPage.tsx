@@ -6,6 +6,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   Grid2,
   IconButton,
   InputAdornment,
@@ -20,6 +21,7 @@ import logoCarelogix from "../assets/logoCarelogix.png";
 import { useAuth } from "../context/AuthContext";
 import { useDebounce } from "../hooks/useDebounce";
 import { UserLoginI } from "../types/user.type";
+
 function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -28,33 +30,69 @@ function LoginPage() {
     password: "",
   });
   const [showPassword, setShowPassword] = React.useState(false);
+  const [errors, setErrors] = useState<{
+    username?: string;
+    password?: string;
+  }>({});
   const debouncedUsername = useDebounce(account.username, 500);
   const debouncedPassword = useDebounce(account.password, 500);
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
   };
-  const handleMouseUpPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
+
+  const validateForm = () => {
+    const validationErrors: any = {};
+    if (!account.username) {
+      validationErrors.username = "Email is required!";
+    } else if (
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(account.username)
+    ) {
+      validationErrors.username = "Invalid email address!";
+    }
+    if (!account.password) {
+      validationErrors.password = "Password is required!";
+    } else if (account.password.length < 6) {
+      validationErrors.password =
+        "Password must be at least 6 characters long!";
+    }
+
+    setErrors(validationErrors);
+    return validationErrors;
   };
+
   const handleSignIn = () => {
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+    setErrors({});
     login(account?.username);
     navigate("/conversation", { replace: true });
   };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    field: string
+    field: "username" | "password"
   ) => {
     const value = e.target.value;
+
+    if (errors[field]) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [field]: undefined,
+      }));
+    }
+
     setAccount((prevAccount) => ({
       ...prevAccount,
       [field]: value,
     }));
   };
+
   useEffect(() => {
     setAccount((prevAccount) => ({
       ...prevAccount,
@@ -62,6 +100,7 @@ function LoginPage() {
       password: debouncedPassword,
     }));
   }, [debouncedUsername, debouncedPassword]);
+
   return (
     <React.Fragment>
       <Grid2 container sx={{ justifyContent: "space-between", p: 2 }}>
@@ -108,15 +147,21 @@ function LoginPage() {
 
           <Grid2 container sx={{ flexDirection: "column", gap: 2, pt: 2 }}>
             <TextField
-              id="outlined-basic"
+              id="email"
               label="Email"
               variant="outlined"
               type="email"
               value={account.username}
               onChange={(e) => handleInputChange(e, "username")}
               fullWidth
+              error={!!errors.username}
+              helperText={errors.username}
             />
-            <FormControl sx={{ width: "100%" }} variant="outlined">
+            <FormControl
+              sx={{ width: "100%" }}
+              variant="outlined"
+              error={!!errors.password}
+            >
               <InputLabel htmlFor="outlined-adornment-password">
                 Password
               </InputLabel>
@@ -133,7 +178,6 @@ function LoginPage() {
                       }
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
-                      onMouseUp={handleMouseUpPassword}
                       edge="end"
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -145,6 +189,7 @@ function LoginPage() {
                 onChange={(e) => handleInputChange(e, "password")}
                 fullWidth
               />
+              <FormHelperText>{errors.password}</FormHelperText>
             </FormControl>
           </Grid2>
           <FormControlLabel
@@ -157,7 +202,6 @@ function LoginPage() {
               variant="contained"
               sx={{ width: "100%", p: 1 }}
               onClick={handleSignIn}
-              disabled={!account?.username || !account?.password}
             >
               Sign In
             </Button>
